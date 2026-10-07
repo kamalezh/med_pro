@@ -1,0 +1,1 @@
+import{K as e,U as t}from"./link-DeJekEZs.js";var n=e(t(),1);function r(e,t=10){let[r,i]=(0,n.useState)(1),a=e.length,o=Math.max(1,Math.ceil(a/t)),s=(0,n.useMemo)(()=>e.slice((r-1)*t,r*t),[e,r,t]),c=e=>i(Math.min(o,Math.max(1,e)));return{page:r,totalPages:o,total:a,current:s,next:()=>c(r+1),prev:()=>c(r-1),goTo:c,setPage:i}}export{r as t};
