@@ -1,5 +1,5 @@
 import { v as require_jsx_runtime } from "../_libs/@radix-ui/react-accordion+[...].mjs";
-import { d as Stethoscope, g as ShieldCheck, r as User } from "../_libs/lucide-react.mjs";
+import { l as Stethoscope, m as ShieldCheck, r as User } from "../_libs/lucide-react.mjs";
 import { t as PageHeader } from "./PageHeader-BAvHonDt.mjs";
 import { t as Card } from "./card-CzXpCsbD.mjs";
 import { t as Switch } from "./switch-Cn1w-cIH.mjs";

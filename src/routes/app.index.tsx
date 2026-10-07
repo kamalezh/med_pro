@@ -3,15 +3,14 @@ import { useEffect } from "react";
 import { useApp } from "@/context/AppContext";
 import { PageHeader } from "@/components/app/PageHeader";
 import { StatCard } from "@/components/app/StatCard";
-import { StatusBadge } from "@/components/app/StatusBadge";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
-  Users, Calendar, Tent, HeartPulse, Stethoscope, ClipboardCheck, ListOrdered,
+  Users, Calendar, HeartPulse, Stethoscope, ClipboardCheck, ListOrdered,
   UserPlus, FileText, TrendingUp, Activity, Pill, Plus,
 } from "lucide-react";
 import {
-  useStorageData, getPatients, getDoctors, getCamps, getAppointments, getPrescriptions, getLabReports,
+  useStorageData, getPatients, getDoctors, getAppointments, getPrescriptions, getLabReports,
 } from "@/lib/storage";
 import {
   ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
@@ -34,7 +33,6 @@ function Dashboard() {
 
   const [patients] = useStorageData(getPatients);
   const [doctors] = useStorageData(getDoctors);
-  const [camps] = useStorageData(getCamps);
   const [appointments] = useStorageData(getAppointments);
   const [prescriptions] = useStorageData(getPrescriptions);
   const [labReports] = useStorageData(getLabReports);
@@ -43,7 +41,6 @@ function Dashboard() {
   const role = user.role;
 
   const upcoming = appointments.filter(a => a.status === "Approved" || a.status === "Pending").slice(0, 5);
-  const activeCamps = camps.filter(c => c.status !== "Completed").slice(0, 4);
 
   // Dynamic distribution by department
   const deptCounts: Record<string, number> = {};
@@ -81,7 +78,7 @@ function Dashboard() {
           <StatCard label="Upcoming Appointments" value={upcoming.length} icon={Calendar} tone="primary" />
           <StatCard label="Active Prescriptions" value={prescriptions.length} icon={Pill} tone="success" />
           <StatCard label="Pending Reports" value={labReports.filter(l => l.status !== "Completed").length} icon={FileText} tone="warning" />
-          <StatCard label="Available Camps" value={camps.length} icon={Tent} tone="primary" />
+          <StatCard label="Lab Reports" value={labReports.length} icon={FileText} tone="primary" />
         </>)}
         {role === "doctor" && (<>
           <StatCard label="Total Appointments" value={appointments.length} icon={Calendar} tone="primary" />
@@ -98,7 +95,7 @@ function Dashboard() {
         {role === "admin" && (<>
           <StatCard label="Total Patients" value={patients.length} icon={Users} tone="primary" />
           <StatCard label="Active Doctors" value={doctors.length} icon={Stethoscope} tone="success" />
-          <StatCard label="Ongoing Camps" value={camps.filter(c => c.status !== "Completed").length} icon={Tent} tone="warning" />
+          <StatCard label="Prescriptions" value={prescriptions.length} icon={Pill} tone="warning" />
           <StatCard label="Total Appointments" value={appointments.length} icon={TrendingUp} tone="success" />
         </>)}
       </div>
@@ -196,34 +193,28 @@ function Dashboard() {
 
         <Card className="p-6 hover-lift">
           <div className="mb-4 flex items-center justify-between">
-            <h3 className="text-lg font-semibold">Active camps</h3>
-            <Link to="/app/camps"><Button size="sm" variant="ghost">Explore</Button></Link>
+            <h3 className="text-lg font-semibold">Recent prescriptions</h3>
+            <Link to="/app/prescriptions"><Button size="sm" variant="ghost">View all</Button></Link>
           </div>
-          {activeCamps.length === 0 ? (
+          {prescriptions.length === 0 ? (
             <div className="py-8 text-center text-sm text-muted-foreground">
-              <p>No active camps available.</p>
-              <Link to="/app/camps" className="mt-2 inline-block">
-                <Button size="sm" variant="outline" className="mt-2">
-                  <Plus className="mr-1 h-3.5 w-3.5" /> Create Camp
-                </Button>
-              </Link>
+              <p>No prescriptions recorded yet.</p>
             </div>
           ) : (
             <div className="space-y-3">
-              {activeCamps.map(c => (
-                <Link key={c.id} to="/app/camps/$id" params={{ id: c.id }} className="block rounded-xl border border-border/50 p-3 hover:bg-muted/30">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <p className="truncate text-sm font-medium">{c.name}</p>
-                      <p className="truncate text-xs text-muted-foreground">{c.location} · {c.date}</p>
-                      <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-muted">
-                        <div className="h-full gradient-primary" style={{ width: `${Math.min(100, (c.registered / (c.capacity || 1)) * 100)}%` }} />
-                      </div>
-                      <p className="mt-1 text-[10px] text-muted-foreground">{c.registered}/{c.capacity} registered</p>
-                    </div>
-                    <StatusBadge status={c.status} />
+              {prescriptions.slice(0, 4).map(rx => (
+                <div key={rx.id} className="flex items-center gap-3 rounded-xl border border-border/50 p-3 hover:bg-muted/30">
+                  <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary">
+                    <Pill className="h-5 w-5" />
                   </div>
-                </Link>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium">{rx.patientName || rx.patientId}</p>
+                    <p className="truncate text-xs text-muted-foreground">{rx.diagnosis} · {rx.doctorName}</p>
+                  </div>
+                  <div className="text-right text-xs">
+                    <p className="font-medium">{rx.date}</p>
+                  </div>
+                </div>
               ))}
             </div>
           )}

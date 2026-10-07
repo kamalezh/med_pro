@@ -40,7 +40,6 @@ import { Route as RegisterAdminRouteImport } from './routes/register.admin'
 import { Route as RegisterDoctorRouteImport } from './routes/register.doctor'
 import { Route as RegisterPatientRouteImport } from './routes/register.patient'
 import { Route as RegisterVolunteerRouteImport } from './routes/register.volunteer'
-import { Route as AppCampsIdRouteImport } from './routes/app.camps.$id'
 import { Route as AppPatientsIdRouteImport } from './routes/app.patients.$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -198,11 +197,6 @@ const RegisterVolunteerRoute = RegisterVolunteerRouteImport.update({
   path: '/register/volunteer',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AppCampsIdRoute = AppCampsIdRouteImport.update({
-  id: '/camps/$id',
-  path: '/camps/$id',
-  getParentRoute: () => AppRoute,
-} as any)
 const AppPatientsIdRoute = AppPatientsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -241,7 +235,6 @@ export interface FileRoutesByFullPath {
   '/register/volunteer': typeof RegisterVolunteerRoute
   '/app/': typeof AppIndexRoute
   '/register/': typeof RegisterIndexRoute
-  '/app/camps/$id': typeof AppCampsIdRoute
   '/app/patients/$id': typeof AppPatientsIdRoute
 }
 export interface FileRoutesByTo {
@@ -275,7 +268,6 @@ export interface FileRoutesByTo {
   '/register/volunteer': typeof RegisterVolunteerRoute
   '/app': typeof AppIndexRoute
   '/register': typeof RegisterIndexRoute
-  '/app/camps/$id': typeof AppCampsIdRoute
   '/app/patients/$id': typeof AppPatientsIdRoute
 }
 export interface FileRoutesById {
@@ -311,7 +303,6 @@ export interface FileRoutesById {
   '/register/volunteer': typeof RegisterVolunteerRoute
   '/app/': typeof AppIndexRoute
   '/register/': typeof RegisterIndexRoute
-  '/app/camps/$id': typeof AppCampsIdRoute
   '/app/patients/$id': typeof AppPatientsIdRoute
 }
 export interface FileRouteTypes {
@@ -348,7 +339,6 @@ export interface FileRouteTypes {
     | '/register/volunteer'
     | '/app/'
     | '/register/'
-    | '/app/camps/$id'
     | '/app/patients/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -382,7 +372,6 @@ export interface FileRouteTypes {
     | '/register/volunteer'
     | '/app'
     | '/register'
-    | '/app/camps/$id'
     | '/app/patients/$id'
   id:
     | '__root__'
@@ -417,7 +406,6 @@ export interface FileRouteTypes {
     | '/register/volunteer'
     | '/app/'
     | '/register/'
-    | '/app/camps/$id'
     | '/app/patients/$id'
   fileRoutesById: FileRoutesById
 }
@@ -651,13 +639,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterVolunteerRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/app/camps/$id': {
-      id: '/app/camps/$id'
-      path: '/camps/$id'
-      fullPath: '/app/camps/$id'
-      preLoaderRoute: typeof AppCampsIdRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/app/patients/$id': {
       id: '/app/patients/$id'
       path: '/$id'
@@ -704,7 +685,6 @@ interface AppRouteChildren {
   AppUsersRoute: typeof AppUsersRoute
   AppVolunteersRoute: typeof AppVolunteersRoute
   AppIndexRoute: typeof AppIndexRoute
-  AppCampsIdRoute: typeof AppCampsIdRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
@@ -731,7 +711,6 @@ const AppRouteChildren: AppRouteChildren = {
   AppUsersRoute: AppUsersRoute,
   AppVolunteersRoute: AppVolunteersRoute,
   AppIndexRoute: AppIndexRoute,
-  AppCampsIdRoute: AppCampsIdRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
