@@ -6,15 +6,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RegisterShell, validators } from "@/components/app/RegisterShell";
 import { registerUserWithRole } from "@/lib/auth";
-import { addPatient } from "@/lib/storage";
+import { addPatient, useStorageData, getCamps } from "@/lib/storage";
 
-type Values = { fullName: string; email: string; phone: string; password: string; confirm: string };
+type Values = { fullName: string; email: string; phone: string; password: string; confirm: string; camp: string };
 
 export default function PatientRegister() {
   const nav = useNavigate();
-  const { register, handleSubmit, watch, formState: { errors, isSubmitting } } = useForm<Values>();
+  const [camps] = useStorageData(getCamps);
+  const { register, handleSubmit, watch, setValue, formState: { errors, isSubmitting } } = useForm<Values>();
   const password = watch("password");
 
   const submit = async (v: Values) => {
@@ -70,6 +72,17 @@ export default function PatientRegister() {
 
           <div><Label>Email</Label><Input type="email" {...register("email", { required: "Required", validate: validators.email })} />{errors.email && <p className="mt-1 text-xs text-destructive">{errors.email.message as string}</p>}</div>
           <div><Label>Phone number</Label><Input {...register("phone", { required: "Required", validate: validators.phone })} />{errors.phone && <p className="mt-1 text-xs text-destructive">{errors.phone.message as string}</p>}</div>
+          <div>
+            <Label>Medical Camp (Optional)</Label>
+            <Select value={watch("camp")} onValueChange={v => setValue("camp", v)}>
+              <SelectTrigger>
+                <SelectValue placeholder={camps.length === 0 ? "No active camps" : "Choose a camp (Optional)"} />
+              </SelectTrigger>
+              <SelectContent>
+                {camps.map(c => <SelectItem key={c.id} value={c.name}>{c.name}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
           <div><Label>Password</Label><Input type="password" {...register("password", { required: "Required", validate: validators.strongPassword })} />{errors.password && <p className="mt-1 text-xs text-destructive">{errors.password.message as string}</p>}</div>
           <div><Label>Confirm password</Label><Input type="password" {...register("confirm", { required: "Required", validate: v => v === password || "Passwords do not match" })} />{errors.confirm && <p className="mt-1 text-xs text-destructive">{errors.confirm.message as string}</p>}</div>
           <div className="sm:col-span-2">
