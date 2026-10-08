@@ -1,3 +1,5 @@
+import { db } from "./firebase";
+import { collection, onSnapshot, addDoc, doc, deleteDoc } from "firebase/firestore";
 import {
   Patient,
   Doctor,
@@ -88,18 +90,28 @@ export const deleteDoctor = (id: string): void => {
 // CAMPS
 export const getCamps = (): Camp[] => getStoredData<Camp>(KEYS.CAMPS, []);
 export const saveCamps = (data: Camp[]): void => setStoredData(KEYS.CAMPS, data);
-export const addCamp = (camp: Omit<Camp, "id" | "registered"> & { id?: string; registered?: number }): Camp => {
-  const current = getCamps();
-  const newCamp: Camp = {
+export const addCamp = (camp: Omit<Camp, "id" | "registered"> & { id?: string; registered?: number }): void => {
+  const newCamp = {
     registered: 0,
     ...camp,
-    id: camp.id || `C${300 + current.length + 1}`,
   };
-  const updated = [newCamp, ...current];
-  saveCamps(updated);
+  addDoc(collection(db, "camps"), newCamp).catch(console.error);
   addActivityLog("Created medical camp", newCamp.name);
-  return newCamp;
 };
+export const deleteCamp = (id: string): void => {
+  deleteDoc(doc(db, "camps", id)).catch(console.error);
+};
+
+// Setup Firebase sync for Camps
+if (typeof window !== "undefined") {
+  const colRef = collection(db, "camps");
+  onSnapshot(colRef, (snap) => {
+    const firebaseCamps = snap.docs.map(d => ({ ...d.data(), id: d.id } as Camp));
+    saveCamps(firebaseCamps);
+  }, (err) => {
+    console.error("Firebase camps sync error:", err);
+  });
+}
 
 // APPOINTMENTS
 export const getAppointments = (): Appointment[] => getStoredData<Appointment>(KEYS.APPOINTMENTS, []);

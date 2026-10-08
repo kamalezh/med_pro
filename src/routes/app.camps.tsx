@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/app/StatusBadge";
 import { Search, Plus, Tent, Users, MapPin, Calendar as CalendarIcon, Trash2 } from "lucide-react";
-import { useStorageData, getCamps, saveCamps } from "@/lib/storage";
+import { useStorageData, getCamps, deleteCamp } from "@/lib/storage";
 import { AddCampModal } from "@/components/app/modals/AddCampModal";
 import { EmptyState } from "@/components/app/EmptyState";
 import { toast } from "sonner";
@@ -31,8 +31,7 @@ function CampsPage() {
   );
 
   const handleDelete = (id: string, name: string) => {
-    const updated = camps.filter(c => c.id !== id);
-    saveCamps(updated);
+    deleteCamp(id);
     toast.success(`Camp ${name} removed`);
   };
 
