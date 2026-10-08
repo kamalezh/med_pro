@@ -11,11 +11,10 @@ export default defineConfig({
     // Redirect TanStack Start's bundled server entry to src/server.ts
     server: { entry: "server" },
   },
-  // Force Nitro to build specifically for Vercel
-  nitro: {
-    // Build for Vercel so server output is compatible with Vercel runtime
-    preset: "vercel",
-  },
   vite: {
+    // @ts-expect-error - Custom Lovable config uses this to override nitro preset
+    nitro: {
+      preset: "vercel",
+    },
   },
 });
