@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/app/StatusBadge";
 import { Search, Plus, Tent, Users, MapPin, Calendar as CalendarIcon, Trash2 } from "lucide-react";
-import { useStorageData, getCamps, deleteCamp } from "@/lib/storage";
+import { useStorageData, deleteCamp, useFirebaseCamps } from "@/lib/storage";
 import { AddCampModal } from "@/components/app/modals/AddCampModal";
 import { EmptyState } from "@/components/app/EmptyState";
 import { toast } from "sonner";
@@ -17,7 +17,7 @@ export const Route = createFileRoute("/app/camps")({ component: CampsPage });
 function CampsPage() {
   const [q, setQ] = useState("");
   const [addModalOpen, setAddModalOpen] = useState(false);
-  const [camps] = useStorageData(getCamps);
+  const [camps] = useFirebaseCamps();
   const { user } = useApp();
 
   // Protect admin only feature - in a real app would be handled at route level

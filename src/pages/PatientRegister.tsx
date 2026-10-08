@@ -9,13 +9,13 @@ import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RegisterShell, validators } from "@/components/app/RegisterShell";
 import { registerUserWithRole } from "@/lib/auth";
-import { addPatient, useStorageData, getCamps } from "@/lib/storage";
+import { addPatient, useFirebaseCamps } from "@/lib/storage";
 
 type Values = { fullName: string; email: string; phone: string; password: string; confirm: string; camp: string };
 
 export default function PatientRegister() {
   const nav = useNavigate();
-  const [camps] = useStorageData(getCamps);
+  const [camps] = useFirebaseCamps();
   const { register, handleSubmit, watch, setValue, formState: { errors, isSubmitting } } = useForm<Values>();
   const password = watch("password");
 

@@ -4,14 +4,14 @@ import { Card } from "@/components/ui/card";
 import { StatCard } from "@/components/app/StatCard";
 import { ResponsiveContainer, BarChart, Bar, AreaChart, Area, PieChart, Pie, Cell, XAxis, YAxis, Tooltip, CartesianGrid, Legend } from "recharts";
 import { Users, TrendingUp, Tent, Stethoscope } from "lucide-react";
-import { useStorageData, getPatients, getAppointments, getCamps, getDoctors } from "@/lib/storage";
+import { useStorageData, getPatients, getAppointments, getDoctors, useFirebaseCamps } from "@/lib/storage";
 
 export const Route = createFileRoute("/app/analytics")({ component: Analytics });
 
 function Analytics() {
   const [patients] = useStorageData(getPatients);
   const [appointments] = useStorageData(getAppointments);
-  const [camps] = useStorageData(getCamps);
+  const [camps] = useFirebaseCamps();
   const [doctors] = useStorageData(getDoctors);
 
   // Dynamic distribution by department

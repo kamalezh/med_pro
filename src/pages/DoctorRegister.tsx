@@ -10,7 +10,7 @@ import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RegisterShell, validators } from "@/components/app/RegisterShell";
 import { registerUserWithRole } from "@/lib/auth";
-import { useStorageData, getCamps, saveCamps, addDoctor } from "@/lib/storage";
+import { useFirebaseCamps, addDoctor } from "@/lib/storage";
 
 type Values = {
   fullName: string; 
@@ -25,7 +25,7 @@ type Values = {
 
 export default function DoctorRegister() {
   const nav = useNavigate();
-  const [campsList] = useStorageData(getCamps);
+  const [campsList] = useFirebaseCamps();
   const [selectedCamp, setSelectedCamp] = useState<string>("");
   const { register, handleSubmit, watch, formState: { errors, isSubmitting } } = useForm<Values>();
   const password = watch("password");
@@ -59,14 +59,6 @@ export default function DoctorRegister() {
         email: v.email,
         phone: v.phone,
       });
-
-      const updatedCamps = campsList.map(c => {
-        if (c.name === campName && !c.doctorsAssigned.includes(docName)) {
-          return { ...c, doctorsAssigned: [...c.doctorsAssigned, docName] };
-        }
-        return c;
-      });
-      if (updatedCamps.length > 0) saveCamps(updatedCamps);
 
       toast.success(`Doctor account created for ${docName}! Assigned to ${campName}`);
       nav({ to: "/login" });

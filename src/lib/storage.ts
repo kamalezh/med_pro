@@ -16,7 +16,6 @@ import {
 const KEYS = {
   PATIENTS: "mcm_patients_data",
   DOCTORS: "mcm_doctors_data",
-  CAMPS: "mcm_camps_data",
   APPOINTMENTS: "mcm_appointments_data",
   PRESCRIPTIONS: "mcm_prescriptions_data",
   LAB_REPORTS: "mcm_lab_reports_data",
@@ -88,29 +87,67 @@ export const deleteDoctor = (id: string): void => {
 };
 
 // CAMPS
-export const getCamps = (): Camp[] => getStoredData<Camp>(KEYS.CAMPS, []);
-export const saveCamps = (data: Camp[]): void => setStoredData(KEYS.CAMPS, data);
-export const addCamp = (camp: Omit<Camp, "id" | "registered"> & { id?: string; registered?: number }): void => {
+export const getCamps = (): Camp[] => {
+  console.warn("getCamps() is deprecated. Use useFirebaseCamps() hook instead.");
+  return [];
+};
+export const saveCamps = (data: Camp[]): void => {
+  console.warn("saveCamps() is deprecated. Camps are directly synced to Firebase.");
+};
+
+export const addCamp = async (camp: Omit<Camp, "id" | "registered"> & { id?: string; registered?: number }): Promise<void> => {
   const newCamp = {
     registered: 0,
     ...camp,
   };
-  addDoc(collection(db, "camps"), newCamp).catch(console.error);
-  addActivityLog("Created medical camp", newCamp.name);
-};
-export const deleteCamp = (id: string): void => {
-  deleteDoc(doc(db, "camps", id)).catch(console.error);
+  try {
+    await addDoc(collection(db, "camps"), newCamp);
+    addActivityLog("Created medical camp", newCamp.name);
+  } catch (err) {
+    console.error("Error creating camp in Firebase:", err);
+    throw err;
+  }
 };
 
-// Setup Firebase sync for Camps
-if (typeof window !== "undefined") {
-  const colRef = collection(db, "camps");
-  onSnapshot(colRef, (snap) => {
-    const firebaseCamps = snap.docs.map(d => ({ ...d.data(), id: d.id } as Camp));
-    saveCamps(firebaseCamps);
-  }, (err) => {
-    console.error("Firebase camps sync error:", err);
-  });
+export const deleteCamp = async (id: string): Promise<void> => {
+  try {
+    await deleteDoc(doc(db, "camps", id));
+  } catch (err) {
+    console.error("Error deleting camp in Firebase:", err);
+    throw err;
+  }
+};
+
+export const updateCamp = async (id: string, data: Partial<Camp>): Promise<void> => {
+  try {
+    const { id: _, ...updateData } = data as any;
+    const { updateDoc } = await import("firebase/firestore");
+    await updateDoc(doc(db, "camps", id), updateData);
+  } catch (err) {
+    console.error("Error updating camp in Firebase:", err);
+    throw err;
+  }
+};
+
+// React hook for auto-subscribing to Camps directly from Firebase
+export function useFirebaseCamps() {
+  const [camps, setCamps] = useState<Camp[]>([]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    
+    const colRef = collection(db, "camps");
+    const unsubscribe = onSnapshot(colRef, (snap) => {
+      const firebaseCamps = snap.docs.map(d => ({ ...d.data(), id: d.id } as Camp));
+      setCamps(firebaseCamps);
+    }, (err) => {
+      console.error("Firebase camps sync error:", err);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  return [camps, setCamps] as const;
 }
 
 // APPOINTMENTS

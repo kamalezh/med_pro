@@ -9,8 +9,7 @@ import {
   Users, Calendar, HeartPulse, Stethoscope, ClipboardCheck, ListOrdered,
   UserPlus, FileText, TrendingUp, Activity, Pill, Plus, Tent,
 } from "lucide-react";
-import {
-  useStorageData, getPatients, getDoctors, getAppointments, getPrescriptions, getLabReports, getCamps,
+  useStorageData, getPatients, getDoctors, getAppointments, getPrescriptions, getLabReports, useFirebaseCamps,
 } from "@/lib/storage";
 import {
   ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
@@ -37,7 +36,7 @@ function Dashboard() {
   const [appointments] = useStorageData(getAppointments);
   const [prescriptions] = useStorageData(getPrescriptions);
   const [labReports] = useStorageData(getLabReports);
-  const [camps] = useStorageData(getCamps);
+  const [camps] = useFirebaseCamps();
   const activeCamps = camps.filter(c => c.status === "Ongoing" || c.status === "Upcoming");
 
   if (!user) return null;

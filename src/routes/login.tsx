@@ -8,7 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Card } from "@/components/ui/card";
 import { useApp } from "@/context/AppContext";
 import { toast } from "sonner";
-import { useStorageData, getCamps, saveCamps, getAppointments, addAppointment, getDoctors, addDoctor } from "@/lib/storage";
+import { useStorageData, getAppointments, addAppointment, getDoctors, addDoctor, useFirebaseCamps, updateCamp } from "@/lib/storage";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { Role } from "@/mock/data";
 import { User, Stethoscope, ShieldCheck, ArrowLeft, Activity, Eye, EyeOff, Tent } from "lucide-react";
@@ -31,7 +31,7 @@ type FormValues = { email: string; password: string; remember: boolean };
 function LoginPage() {
   const [role, setRole] = useState<Role | null>(null);
   const [showPass, setShowPass] = useState(false);
-  const [campsList] = useStorageData(getCamps);
+  const [campsList] = useFirebaseCamps();
   const [selectedCamp, setSelectedCamp] = useState<string>("");
   const { login } = useApp();
   const nav = useNavigate();
@@ -78,8 +78,10 @@ function LoginPage() {
         });
 
         // Register in camp count
-        const updatedCamps = campsList.map(c => c.name === campName ? { ...c, registered: c.registered + 1 } : c);
-        if (updatedCamps.length > 0) saveCamps(updatedCamps);
+        const currentCamp = campsList.find(c => c.name === campName);
+        if (currentCamp) {
+          updateCamp(currentCamp.id, { registered: currentCamp.registered + 1 });
+        }
 
         toast.success(`Welcome ${dynamicName}! Auto-queued for ${campName} with Token #${nextToken}`);
         nav({ to: "/app/appointments" });
@@ -95,13 +97,10 @@ function LoginPage() {
         } catch {}
 
         // Assign doctor to camp
-        const updatedCamps = campsList.map(c => {
-          if (c.name === campName && !c.doctorsAssigned.includes(docName)) {
-            return { ...c, doctorsAssigned: [...c.doctorsAssigned, docName] };
-          }
-          return c;
-        });
-        if (updatedCamps.length > 0) saveCamps(updatedCamps);
+        const currentCamp = campsList.find(c => c.name === campName);
+        if (currentCamp && !currentCamp.doctorsAssigned.includes(docName)) {
+          updateCamp(currentCamp.id, { doctorsAssigned: [...currentCamp.doctorsAssigned, docName] });
+        }
 
         // Ensure doctor is registered in local doctors list
         const existingDocs = getDoctors();

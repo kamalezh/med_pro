@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { QrCode } from "lucide-react";
-import { useStorageData, getCamps, addPatient } from "@/lib/storage";
+import { useStorageData, addPatient, useFirebaseCamps } from "@/lib/storage";
 
 export const Route = createFileRoute("/app/patient-registration")({ component: RegisterPatient });
 
@@ -24,7 +24,7 @@ type FormValues = {
 };
 
 function RegisterPatient() {
-  const [camps] = useStorageData(getCamps);
+  const [camps] = useFirebaseCamps();
   const navigate = useNavigate();
 
   const { register, handleSubmit, reset, setValue, watch } = useForm<FormValues>({

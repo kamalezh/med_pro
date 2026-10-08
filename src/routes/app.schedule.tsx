@@ -5,14 +5,14 @@ import { StatusBadge } from "@/components/app/StatusBadge";
 import { Calendar as CalIcon, MapPin, Tent } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { useState } from "react";
-import { useStorageData, getCamps } from "@/lib/storage";
+import { useStorageData, useFirebaseCamps } from "@/lib/storage";
 import { EmptyState } from "@/components/app/EmptyState";
 
 export const Route = createFileRoute("/app/schedule")({ component: SchedulePage });
 
 function SchedulePage() {
   const [date, setDate] = useState<Date | undefined>(new Date());
-  const [camps] = useStorageData(getCamps);
+  const [camps] = useFirebaseCamps();
 
   return (
     <div>

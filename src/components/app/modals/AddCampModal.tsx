@@ -24,30 +24,34 @@ export function AddCampModal({ open, onOpenChange, onSuccess }: AddCampModalProp
   const [capacity, setCapacity] = useState("");
   const [status, setStatus] = useState("Upcoming");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !date || !endDate || !location) {
       toast.error("Please fill in all required fields.");
       return;
     }
 
-    addCamp({
-      name,
-      description,
-      date,
-      endDate,
-      location,
-      status: status as any,
-      capacity: parseInt(capacity) || 100,
-      doctorsAssigned: [],
-      volunteersAssigned: [],
-      services: ["General checkup", "Consultation"],
-    });
+    try {
+      await addCamp({
+        name,
+        description,
+        date,
+        endDate,
+        location,
+        status: status as any,
+        capacity: parseInt(capacity) || 100,
+        doctorsAssigned: [],
+        volunteersAssigned: [],
+        services: ["General checkup", "Consultation"],
+      });
 
-    toast.success("Medical camp created successfully!");
-    onOpenChange(false);
-    resetForm();
-    if (onSuccess) onSuccess();
+      toast.success("Medical camp created successfully!");
+      onOpenChange(false);
+      resetForm();
+      if (onSuccess) onSuccess();
+    } catch (error: any) {
+      toast.error("Failed to create camp: " + (error.message || "Unknown error"));
+    }
   };
 
   const resetForm = () => {
