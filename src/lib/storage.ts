@@ -101,7 +101,7 @@ export const addCamp = async (camp: Omit<Camp, "id" | "registered"> & { id?: str
     ...camp,
   };
   try {
-    await addDoc(collection(db, "camps"), newCamp);
+    await addDoc(collection(db, "campRegistrations"), newCamp);
     addActivityLog("Created medical camp", newCamp.name);
   } catch (err) {
     console.error("Error creating camp in Firebase:", err);
@@ -111,7 +111,7 @@ export const addCamp = async (camp: Omit<Camp, "id" | "registered"> & { id?: str
 
 export const deleteCamp = async (id: string): Promise<void> => {
   try {
-    await deleteDoc(doc(db, "camps", id));
+    await deleteDoc(doc(db, "campRegistrations", id));
   } catch (err) {
     console.error("Error deleting camp in Firebase:", err);
     throw err;
@@ -122,7 +122,7 @@ export const updateCamp = async (id: string, data: Partial<Camp>): Promise<void>
   try {
     const { id: _, ...updateData } = data as any;
     const { updateDoc } = await import("firebase/firestore");
-    await updateDoc(doc(db, "camps", id), updateData);
+    await updateDoc(doc(db, "campRegistrations", id), updateData);
   } catch (err) {
     console.error("Error updating camp in Firebase:", err);
     throw err;
@@ -136,7 +136,7 @@ export function useFirebaseCamps() {
   useEffect(() => {
     if (typeof window === "undefined") return;
     
-    const colRef = collection(db, "camps");
+    const colRef = collection(db, "campRegistrations");
     const unsubscribe = onSnapshot(colRef, (snap) => {
       const firebaseCamps = snap.docs.map(d => ({ ...d.data(), id: d.id } as Camp));
       setCamps(firebaseCamps);

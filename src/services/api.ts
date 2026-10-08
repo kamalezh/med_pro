@@ -26,11 +26,11 @@ export const appointmentService = {
 
 export const campService = {
   list: async () => {
-    const snap = await getDocs(collection(db, "camps"));
+    const snap = await getDocs(collection(db, "campRegistrations"));
     return snap.docs.map(d => ({ ...d.data(), id: d.id } as Camp));
   },
   get: async (id: string) => {
-    const d = await getDoc(doc(db, "camps", id));
+    const d = await getDoc(doc(db, "campRegistrations", id));
     return d.exists() ? ({ ...d.data(), id: d.id } as Camp) : null;
   },
 };
