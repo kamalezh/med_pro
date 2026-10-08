@@ -34,7 +34,7 @@ export function Topbar({ onMenu }: { onMenu: () => void }) {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className="ml-1 grid h-9 w-9 place-items-center rounded-full gradient-primary text-sm font-semibold text-white shadow-soft">
-                {user?.name.split(" ").map(n => n[0]).slice(0,2).join("")}
+                {user?.name?.split(" ").map(n => n[0]).slice(0,2).join("") || "U"}
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56">
