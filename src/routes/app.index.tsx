@@ -7,15 +7,16 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
   Users, Calendar, HeartPulse, Stethoscope, ClipboardCheck, ListOrdered,
-  UserPlus, FileText, TrendingUp, Activity, Pill, Plus,
+  UserPlus, FileText, TrendingUp, Activity, Pill, Plus, Tent,
 } from "lucide-react";
 import {
-  useStorageData, getPatients, getDoctors, getAppointments, getPrescriptions, getLabReports,
+  useStorageData, getPatients, getDoctors, getAppointments, getPrescriptions, getLabReports, getCamps,
 } from "@/lib/storage";
 import {
   ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
   PieChart, Pie, Cell, Legend,
 } from "recharts";
+import { StatusBadge } from "@/components/app/StatusBadge";
 
 export const Route = createFileRoute("/app/")({
   component: Dashboard,
@@ -36,8 +37,10 @@ function Dashboard() {
   const [appointments] = useStorageData(getAppointments);
   const [prescriptions] = useStorageData(getPrescriptions);
   const [labReports] = useStorageData(getLabReports);
+  const [camps] = useStorageData(getCamps);
+  const activeCamps = camps.filter(c => c.status === "Ongoing" || c.status === "Upcoming");
 
-  if (!user || user.role !== "admin") return null;
+  if (!user) return null;
   const role = user.role;
 
   const upcoming = appointments.filter(a => a.status === "Approved" || a.status === "Pending").slice(0, 5);

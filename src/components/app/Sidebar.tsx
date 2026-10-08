@@ -5,7 +5,7 @@ import {
   LayoutDashboard, Calendar, FileText, HeartPulse, User, Users,
   Stethoscope, FlaskConical, ClipboardCheck, UserPlus, ListOrdered, QrCode,
   BarChart3, UserCog, Building2, ShieldCheck, Database, History, Activity,
-  Pill,
+  Pill, Tent,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { Role } from "@/mock/data";
@@ -31,6 +31,7 @@ const nav: Record<Role, Item[]> = {
     { to: "/app/attendance", label: "Attendance", icon: ClipboardCheck },
     { to: "/app/patient-registration", label: "Patient Registration", icon: UserPlus },
     { to: "/app/queue", label: "Queue Management", icon: ListOrdered },
+    { to: "/app/camps", label: "Camps", icon: Tent },
     { to: "/app/profile", label: "Profile", icon: User },
   ],
   admin: [
@@ -38,6 +39,7 @@ const nav: Record<Role, Item[]> = {
     { to: "/app/analytics", label: "Analytics", icon: BarChart3 },
     { to: "/app/patients", label: "Patients", icon: Users },
     { to: "/app/doctors", label: "Doctors", icon: Stethoscope },
+    { to: "/app/camps", label: "Camps", icon: Tent },
 
     { to: "/app/appointments", label: "Appointments", icon: Calendar },
     { to: "/app/reports", label: "Reports", icon: FileText },

@@ -92,9 +92,6 @@ export const addCamp = (camp: Omit<Camp, "id" | "registered"> & { id?: string; r
   const current = getCamps();
   const newCamp: Camp = {
     registered: 0,
-    doctorsAssigned: [],
-    volunteersAssigned: [],
-    services: ["General checkup", "Consultation"],
     ...camp,
     id: camp.id || `C${300 + current.length + 1}`,
   };

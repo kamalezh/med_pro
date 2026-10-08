@@ -19,6 +19,7 @@ import { Route as AppAppointmentsRouteImport } from './routes/app.appointments'
 import { Route as AppAttendanceRouteImport } from './routes/app.attendance'
 import { Route as AppBackupRouteImport } from './routes/app.backup'
 import { Route as AppBookAppointmentRouteImport } from './routes/app.book-appointment'
+import { Route as AppCampsRouteImport } from './routes/app.camps'
 import { Route as AppConsultationRouteImport } from './routes/app.consultation'
 import { Route as AppDoctorsRouteImport } from './routes/app.doctors'
 import { Route as AppLabReportsRouteImport } from './routes/app.lab-reports'
@@ -90,6 +91,11 @@ const AppBackupRoute = AppBackupRouteImport.update({
 const AppBookAppointmentRoute = AppBookAppointmentRouteImport.update({
   id: '/book-appointment',
   path: '/book-appointment',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCampsRoute = AppCampsRouteImport.update({
+  id: '/camps',
+  path: '/camps',
   getParentRoute: () => AppRoute,
 } as any)
 const AppConsultationRoute = AppConsultationRouteImport.update({
@@ -213,6 +219,7 @@ export interface FileRoutesByFullPath {
   '/app/attendance': typeof AppAttendanceRoute
   '/app/backup': typeof AppBackupRoute
   '/app/book-appointment': typeof AppBookAppointmentRoute
+  '/app/camps': typeof AppCampsRoute
   '/app/consultation': typeof AppConsultationRoute
   '/app/doctors': typeof AppDoctorsRoute
   '/app/lab-reports': typeof AppLabReportsRoute
@@ -246,6 +253,7 @@ export interface FileRoutesByTo {
   '/app/attendance': typeof AppAttendanceRoute
   '/app/backup': typeof AppBackupRoute
   '/app/book-appointment': typeof AppBookAppointmentRoute
+  '/app/camps': typeof AppCampsRoute
   '/app/consultation': typeof AppConsultationRoute
   '/app/doctors': typeof AppDoctorsRoute
   '/app/lab-reports': typeof AppLabReportsRoute
@@ -281,6 +289,7 @@ export interface FileRoutesById {
   '/app/attendance': typeof AppAttendanceRoute
   '/app/backup': typeof AppBackupRoute
   '/app/book-appointment': typeof AppBookAppointmentRoute
+  '/app/camps': typeof AppCampsRoute
   '/app/consultation': typeof AppConsultationRoute
   '/app/doctors': typeof AppDoctorsRoute
   '/app/lab-reports': typeof AppLabReportsRoute
@@ -317,6 +326,7 @@ export interface FileRouteTypes {
     | '/app/attendance'
     | '/app/backup'
     | '/app/book-appointment'
+    | '/app/camps'
     | '/app/consultation'
     | '/app/doctors'
     | '/app/lab-reports'
@@ -350,6 +360,7 @@ export interface FileRouteTypes {
     | '/app/attendance'
     | '/app/backup'
     | '/app/book-appointment'
+    | '/app/camps'
     | '/app/consultation'
     | '/app/doctors'
     | '/app/lab-reports'
@@ -384,6 +395,7 @@ export interface FileRouteTypes {
     | '/app/attendance'
     | '/app/backup'
     | '/app/book-appointment'
+    | '/app/camps'
     | '/app/consultation'
     | '/app/doctors'
     | '/app/lab-reports'
@@ -490,6 +502,13 @@ declare module '@tanstack/react-router' {
       path: '/book-appointment'
       fullPath: '/app/book-appointment'
       preLoaderRoute: typeof AppBookAppointmentRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/camps': {
+      id: '/app/camps'
+      path: '/camps'
+      fullPath: '/app/camps'
+      preLoaderRoute: typeof AppCampsRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/consultation': {
@@ -668,6 +687,7 @@ interface AppRouteChildren {
   AppAttendanceRoute: typeof AppAttendanceRoute
   AppBackupRoute: typeof AppBackupRoute
   AppBookAppointmentRoute: typeof AppBookAppointmentRoute
+  AppCampsRoute: typeof AppCampsRoute
   AppConsultationRoute: typeof AppConsultationRoute
   AppDoctorsRoute: typeof AppDoctorsRoute
   AppLabReportsRoute: typeof AppLabReportsRoute
@@ -694,6 +714,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppAttendanceRoute: AppAttendanceRoute,
   AppBackupRoute: AppBackupRoute,
   AppBookAppointmentRoute: AppBookAppointmentRoute,
+  AppCampsRoute: AppCampsRoute,
   AppConsultationRoute: AppConsultationRoute,
   AppDoctorsRoute: AppDoctorsRoute,
   AppLabReportsRoute: AppLabReportsRoute,

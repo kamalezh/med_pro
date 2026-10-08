@@ -11,11 +11,11 @@ export default defineConfig({
     // Redirect TanStack Start's bundled server entry to src/server.ts
     server: { entry: "server" },
   },
+  // Force Nitro to build specifically for Vercel
+  nitro: {
+    // Build for Vercel so server output is compatible with Vercel runtime
+    preset: "vercel",
+  },
   vite: {
-    // Force Nitro to build specifically for Netlify Functions/Edge
-    nitro: {
-      // Build for Vercel so server output is compatible with Vercel runtime
-      preset: "vercel",
-    },
   },
 });

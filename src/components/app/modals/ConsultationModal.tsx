@@ -24,7 +24,7 @@ interface ConsultationModalProps {
   onSuccess?: () => void;
 }
 
-type Med = { name: string; dosage: string; freq: string; duration: string };
+type Med = { name: string; dosage: string; frequency: string; duration: string };
 
 export function ConsultationModal({ appointment, open, onOpenChange, onSuccess }: ConsultationModalProps) {
   const { user } = useApp();
@@ -33,7 +33,7 @@ export function ConsultationModal({ appointment, open, onOpenChange, onSuccess }
   const [notes, setNotes] = useState("");
   const [followUp, setFollowUp] = useState("");
   const [meds, setMeds] = useState<Med[]>([
-    { name: "Paracetamol 500mg", dosage: "1 tablet", freq: "3x daily", duration: "5 days" },
+    { name: "Paracetamol 500mg", dosage: "1 tablet", frequency: "3x daily", duration: "5 days" },
   ]);
 
   if (!appointment) return null;
@@ -42,7 +42,7 @@ export function ConsultationModal({ appointment, open, onOpenChange, onSuccess }
   const patientObj = patients.find(p => p.name === appointment.patientName || p.id === appointment.patientId);
 
   const handleAddMed = () => {
-    setMeds([...meds, { name: "", dosage: "1 tablet", freq: "2x daily", duration: "7 days" }]);
+    setMeds([...meds, { name: "", dosage: "1 tablet", frequency: "2x daily", duration: "7 days" }]);
   };
 
   const handleRemoveMed = (index: number) => {
@@ -92,7 +92,7 @@ export function ConsultationModal({ appointment, open, onOpenChange, onSuccess }
     setDiagnosis("");
     setNotes("");
     setFollowUp("");
-    setMeds([{ name: "Paracetamol 500mg", dosage: "1 tablet", freq: "3x daily", duration: "5 days" }]);
+    setMeds([{ name: "Paracetamol 500mg", dosage: "1 tablet", frequency: "3x daily", duration: "5 days" }]);
   };
 
   return (
@@ -180,8 +180,8 @@ export function ConsultationModal({ appointment, open, onOpenChange, onSuccess }
                 <div className="col-span-2">
                   <Input
                     placeholder="Freq"
-                    value={m.freq}
-                    onChange={(e) => handleMedChange(i, "freq", e.target.value)}
+                    value={m.frequency}
+                    onChange={(e) => handleMedChange(i, "frequency", e.target.value)}
                   />
                 </div>
                 <div className="col-span-2">

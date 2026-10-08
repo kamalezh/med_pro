@@ -1,5 +1,5 @@
 // Health schema types and options — mock data arrays removed.
-export type Role = "patient" | "doctor" | "admin";
+export type Role = "patient" | "doctor" | "admin" | "volunteer";
 
 export interface MockUser {
   id: string;
